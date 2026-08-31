@@ -1,0 +1,220 @@
+Final integration test
+1. Start Socket listener
+Terminal 1:
+
+npm run dev
+
+Terminal 2:
+
+node tests\testSocket.js
+
+Leave it running.
+
+2. Create final delivery
+
+Terminal 3:
+Invoke-RestMethod `
+  -Uri "http://localhost:5000/api/deliveries" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body '{
+    "orderReference": "FINAL-TEST-001",
+    "customer": {
+      "name": "Final Integration Customer",
+      "phone": "0777777777",
+      "address": "Nairobi"
+    },
+    "itemDescription": "Final integration test package",
+    "notes": "Complete Reflex workflow test"
+  }'
+Record:
+
+FINAL_DELIVERY_ID
+
+and:
+
+FINAL_VERIFICATION_CODE : 06E96143
+
+You should immediately see:
+
+DELIVERY CREATED EVENT
+***
+=== DELIVERY CREATED EVENT ===
+Order Reference: FINAL-TEST-001
+Customer: Final Integration Customer
+Status: CREATED
+Verification Code: 06E96143
+==============================
+***
+
+and run this to get the IDs
+Invoke-RestMethod `
+  -Uri "http://localhost:5000/api/deliveries" `
+  -Method GET | `
+  ConvertTo-Json -Depth 10
+
+***
+ "customer":  {
+                                            "name":  "Final Integration Customer",
+                                            "phone":  "0777777777",
+                                            "address":  "Nairobi"
+                                        },
+                           "assignment":  {
+                                              "rider":  null,
+                                              "dispatcher":  null,
+                                              "assignedAt":  null
+                                          },
+                           "verification":  {
+                                                "verificationCode":  "06E96143",
+                                                "verified":  false,
+                                                "verifiedBy":  null,
+                                                "verifiedAt":  null
+                                            },
+                           "_id":  "6a95a78af6e1971f3ee32703",
+                           "orderReference":  "FINAL-TEST-001",
+                           "itemDescription":  "Final integration test package",
+                           "notes":  "Complete Reflex workflow test",
+                           "status":  "CREATED",
+                           "assignedRider":  null,
+                           "statusHistory":  [
+
+                                             ],
+                           "createdAt":  "2026-08-31T16:10:50.879Z",
+                           "updatedAt":  "2026-08-31T16:10:50.879Z",
+                           "__v":  0
+                       },
+***
+
+***
+FINAL_DELIVERY_ID
+6a95a78af6e1971f3ee32703
+***
+
+3. Assign
+
+Use:
+
+Rider      = 6a914701c4d362fbbda4c494
+Dispatcher = 6a91da9a58d0259278f29780
+
+Invoke-RestMethod `
+  -Uri "http://localhost:5000/api/deliveries/6a95a78af6e1971f3ee32703/assign" `
+  -Method PATCH `
+  -ContentType "application/json" `
+  -Body '{
+    "riderId": "6a914701c4d362fbbda4c494",
+    "dispatcherId": "6a91da9a58d0259278f29780"
+  }'
+
+Expected:
+
+Delivery assigned successfully
+
+and:
+
+DELIVERY ASSIGNED EVENT
+socket.io response
+***
+=== DELIVERY ASSIGNED EVENT ===
+Order Reference: FINAL-TEST-001
+Status: ASSIGNED
+Assigned Rider: 6a914701c4d362fbbda4c494
+===============================
+***
+
+4. Pickup
+Invoke-RestMethod `
+  -Uri "http://localhost:5000/api/deliveries/6a95a78af6e1971f3ee32703/status" `
+  -Method PATCH `
+  -ContentType "application/json" `
+  -Body '{
+    "status": "PICKED_UP",
+    "riderId": "6a914701c4d362fbbda4c494"
+  }'
+Expected:
+
+Delivery status updated successfully
+
+and:
+
+DELIVERY STATUS UPDATED EVENT
+Status: PICKED_UP
+
+testSocket response
+***
+=== DELIVERY STATUS UPDATED EVENT ===
+Order Reference: FINAL-TEST-001
+Status: PICKED_UP
+Assigned Rider: 6a914701c4d362fbbda4c494
+=====================================
+***
+
+5. Verify and deliver
+Replace YOUR_FINAL_CODE with the code generated for FINAL-TEST-001.
+Invoke-RestMethod `
+  -Uri "http://localhost:5000/api/deliveries/6a95a78af6e1971f3ee32703/verify" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body '{
+    "verificationCode": "06E96143",
+    "riderId": "6a914701c4d362fbbda4c494"
+  }'
+
+Expected:
+
+Delivery verified and marked as delivered
+
+and Socket.io:
+
+DELIVERY DELIVERED EVENT
+Status: DELIVERED
+Verified: true
+
+***
+=== DELIVERY DELIVERED EVENT ===
+Order Reference: FINAL-TEST-001
+Status: DELIVERED
+Verified: true
+===============================
+***
+
+6. Final database verification
+
+Now run:
+Invoke-RestMethod `
+  -Uri "http://localhost:5000/api/deliveries" `
+  -Method GET | `
+  ConvertTo-Json -Depth 10
+
+
+Find:
+
+FINAL-TEST-001
+
+It should show:
+
+status: DELIVERED
+
+and:
+
+verification:
+    verified: true
+    verificationCode: YOUR_FINAL_CODE
+    verifiedBy: 6a914701c4d362fbbda4c494
+    verifiedAt: <timestamp>
+
+The assignment should show:
+
+rider:
+6a914701c4d362fbbda4c494
+
+dispatcher:
+6a91da9a58d0259278f29780
+
+And statusHistory should contain the three transitions:
+
+CREATED → ASSIGNED
+ASSIGNED → PICKED_UP
+PICKED_UP → DELIVERED
+
+
