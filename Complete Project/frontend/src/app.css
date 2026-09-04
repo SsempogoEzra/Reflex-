@@ -1,0 +1,740 @@
+/* ==========================================================================
+   Sidebar (desktop) — role-tinted per spec role-based dashboards
+   ========================================================================== */
+
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border-soft);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 6px;
+}
+
+.sidebar__brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--role-color, var(--color-primary));
+  color: white;
+  flex-shrink: 0;
+}
+
+.sidebar__brand-text strong {
+  display: block;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+
+.sidebar__brand-text span {
+  color: var(--color-text-faint);
+  font-size: 11px;
+}
+
+.sidebar__role-pill {
+  margin: 0 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  background: var(--role-soft, var(--color-primary-soft));
+  color: var(--role-color, var(--color-primary));
+}
+
+.sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-dim);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.sidebar__link:hover {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.sidebar__link.active {
+  background: var(--role-soft, var(--color-primary-soft));
+  color: var(--role-color, var(--color-primary));
+  font-weight: 600;
+}
+
+.sidebar__footer {
+  border-top: 1px solid var(--color-border-soft);
+  padding-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ==========================================================================
+   Top bar
+   ========================================================================== */
+
+.topbar {
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--color-border-soft);
+  background: var(--color-bg);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.topbar__title {
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--role-color, var(--color-primary));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Mobile bottom nav
+   ========================================================================== */
+
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .sidebar {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--mobilenav-h);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border-soft);
+    z-index: 20;
+    padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+  }
+
+  .mobile-nav__link {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--color-text-faint);
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+  }
+
+  .mobile-nav__link.active {
+    color: var(--role-color, var(--color-primary));
+  }
+
+  .topbar {
+    padding: 0 16px;
+  }
+}
+
+/* ==========================================================================
+   Summary cards
+   ========================================================================== */
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 860px) {
+  .summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.summary-card__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.summary-card__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-card__value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.summary-card__label {
+  color: var(--color-text-dim);
+  font-size: 12px;
+}
+
+/* ==========================================================================
+   Delivery list (table on desktop, cards on mobile)
+   ========================================================================== */
+
+.delivery-list__head {
+  display: grid;
+  grid-template-columns: 110px 1.4fr 1.4fr 130px 100px 40px;
+  gap: 12px;
+  padding: 12px 20px;
+  color: var(--color-text-faint);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+.delivery-row {
+  display: grid;
+  grid-template-columns: 110px 1.4fr 1.4fr 130px 100px 40px;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border-soft);
+  transition: background 0.12s ease;
+}
+
+.delivery-row:last-child {
+  border-bottom: none;
+}
+
+.delivery-row:hover {
+  background: var(--color-surface-alt);
+}
+
+.delivery-row__id {
+  font-weight: 700;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.delivery-row__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.delivery-row__meta strong {
+  font-size: 13px;
+  line-height: 1.3;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.delivery-row__meta span {
+  color: var(--color-text-dim);
+  font-size: 12px;
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.delivery-row__time {
+  color: var(--color-text-faint);
+  font-size: 12px;
+}
+
+.delivery-row__chevron {
+  color: var(--color-text-faint);
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 860px) {
+  .delivery-list__head {
+    display: none;
+  }
+
+  .delivery-row {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'id status'
+      'meta1 meta1'
+      'meta2 meta2'
+      'time chevron';
+    row-gap: 6px;
+    padding: 14px 16px;
+  }
+
+  .delivery-row__id {
+    grid-area: id;
+  }
+  .delivery-row__status {
+    grid-area: status;
+    justify-self: end;
+  }
+  /* FIX: the two .delivery-row__meta blocks (customer/item, and address)
+     were both assigned to the same 'meta' grid area, so they stacked
+     directly on top of each other. Split them into meta1/meta2 using
+     nth-of-type, since they're the only two <div> children of .delivery-row
+     and always appear in this order (see DeliveryList.jsx). */
+  .delivery-row__meta:nth-of-type(1) {
+    grid-area: meta1;
+  }
+  .delivery-row__meta:nth-of-type(2) {
+    grid-area: meta2;
+  }
+  .delivery-row__time {
+    grid-area: time;
+  }
+  .delivery-row__chevron {
+    grid-area: chevron;
+  }
+}
+
+/* ==========================================================================
+   Section headers within cards
+   ========================================================================== */
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 0;
+}
+
+.card-header h2 {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.link-muted {
+  color: var(--color-text-dim);
+  font-size: 12px;
+  font-weight: 600;
+}
+.link-muted:hover {
+  color: var(--color-text);
+}
+
+/* ==========================================================================
+   Tabs (Dispatcher: Open/Unassigned vs Active)
+   ========================================================================== */
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--color-surface-alt);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.tab {
+  padding: 8px 16px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-dim);
+}
+
+.tab.active {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+/* ==========================================================================
+   Order / assignment cards (Dispatcher open orders)
+   ========================================================================== */
+
+.order-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border-soft);
+  flex-wrap: wrap;
+}
+
+.order-card:last-child {
+  border-bottom: none;
+}
+
+.order-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 200px;
+}
+
+.order-card__info strong {
+  font-size: 14px;
+}
+
+.order-card__info span {
+  color: var(--color-text-dim);
+  font-size: 12px;
+}
+
+.order-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.select-rider {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  font-size: 13px;
+  min-width: 150px;
+}
+
+/* ==========================================================================
+   Status timeline (Rider delivery detail)
+   ========================================================================== */
+
+.timeline {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+  padding: 8px 4px 4px;
+}
+
+.timeline__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  position: relative;
+}
+
+.timeline__dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-alt);
+  border: 2px solid var(--color-border);
+  color: var(--color-text-faint);
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.timeline__step.done .timeline__dot {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: #06281d;
+}
+
+.timeline__step.current .timeline__dot {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.timeline__line {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--color-border);
+  z-index: 0;
+}
+
+.timeline__step.done .timeline__line {
+  background: var(--color-success);
+}
+
+.timeline__step:last-child .timeline__line {
+  display: none;
+}
+
+.timeline__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-faint);
+  text-align: center;
+}
+
+.timeline__step.done .timeline__label,
+.timeline__step.current .timeline__label {
+  color: var(--color-text);
+}
+
+@media (max-width: 500px) {
+  .timeline__label {
+    font-size: 10px;
+  }
+}
+
+/* ==========================================================================
+   Detail rows (delivery detail pages)
+   ========================================================================== */
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px 16px;
+}
+
+.detail-grid dt {
+  color: var(--color-text-dim);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.detail-grid dd {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   Scanner (Rider Scan to Deliver)
+   ========================================================================== */
+
+.scanner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 36px 20px;
+}
+
+.scanner__frame {
+  width: 220px;
+  height: 220px;
+  border-radius: var(--radius-lg);
+  background: #05070c;
+  border: 2px solid var(--color-border);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.scanner__frame::before {
+  content: '';
+  position: absolute;
+  inset: 24px;
+  border: 2px solid var(--color-success);
+  border-radius: var(--radius-sm);
+  opacity: 0.9;
+}
+
+.scanner__scanline {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  height: 2px;
+  background: var(--color-success);
+  box-shadow: 0 0 10px var(--color-success);
+  animation: scan 1.8s ease-in-out infinite;
+}
+
+@keyframes scan {
+  0% {
+    top: 24px;
+  }
+  50% {
+    top: 196px;
+  }
+  100% {
+    top: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scanner__scanline {
+    animation: none;
+    top: 110px;
+  }
+}
+
+.scanner__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-success);
+}
+
+/* ==========================================================================
+   Role select screen
+   ========================================================================== */
+
+.role-select {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.role-select__panel {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.role-select__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+
+.role-select__brand-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-select__tagline {
+  text-align: center;
+  color: var(--color-text-dim);
+}
+
+.role-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px;
+  text-align: left;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-soft);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.role-option:hover {
+  border-color: var(--role-color);
+  background: var(--color-surface-alt);
+}
+
+.role-option__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--role-soft);
+  color: var(--role-color);
+  flex-shrink: 0;
+}
+
+.role-option__text strong {
+  display: block;
+  font-size: 14px;
+}
+
+.role-option__text span {
+  color: var(--color-text-dim);
+  font-size: 12px;
+}
+
+.rider-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rider-picker__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-soft);
+  cursor: pointer;
+}
+
+.rider-picker__option:hover {
+  border-color: var(--role-rider);
+}
